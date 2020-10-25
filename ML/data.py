@@ -31,50 +31,18 @@ print(dataset.groupby('class').size())
 
 # box and whisker plots
 dataset.plot(kind='box', subplots =True, layout=(2,2),sharex=False,sharey=False)
-# pyplot.show()
+pyplot.show()
 
 # histograms
 dataset.hist()
-# pyplot.show()
+pyplot.show()
 
 # scatter plot matrix
 scatter_matrix(dataset)
-# pyplot.show()
+pyplot.show()
 
 # Split-out validation dataset
 array = dataset.values
 X = array[:,0:4]
 y = array[:,4]
 X_train, X_validation, Y_train, Y_validation = train_test_split(X, y, test_size=0.20, random_state=1)
-
-# training data in X_train and Y_train for preparing models
-# X_validation and Y_validation sets for later
-
-# k-Fold Cross-Validation
-#1 Shuffle the dataset randomly
-#2 Split the dataset into k groups
-#3 For each unique group
-    #1 Take the group as a hold out or test data set
-    #2 Take the remaining groups as a training data set
-    #3 Fit the model on the training set and evaluate it on the test set
-    #4 Retain the evaluation score and discard the model
-#4 Summarize the skill of the model using the sample of model evaluation scores
-
-# Spot Check Algorithms
-models = []
-models.append(('LR',LogisticRegression(solver='liblinear',multi_class='ovr')))
-models.append(('LDA',LinearDiscriminantAnalysis()))
-models.append(('KNN',KNeighborsClassifier()))
-models.append(('CART',DecisionTreeClassifier()))
-models.append(('NB', GaussianNB()))
-models.append(('SVM', SVC(gamma='auto')))
-
-# evaluate each model in turn
-results = []
-names = []
-for name,model in models:
-    kfold = StratifiedKFold(n_splits=10, random_state=1, shuffle=True)
-    cv_results = cross_val_score(model,X_train,Y_train,cv=kfold,scoring='accuracy')
-    results.append(cv_results)
-    names.append(name)
-    print('%s: %f (%f)' % (name, cv_results.mean(),cv_results.std()))
